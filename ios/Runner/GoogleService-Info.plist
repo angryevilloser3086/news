@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>78717680757-a0j3pmv9kqo4dmdf8k4ns75bfsh0goij.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.78717680757-a0j3pmv9kqo4dmdf8k4ns75bfsh0goij</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBb8RQM4G0kEy3ubnbC6-JMV9h7toWR3ME</string>
+	<key>GCM_SENDER_ID</key>
+	<string>78717680757</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.newsReader</string>
+	<key>PROJECT_ID</key>
+	<string>newreader-4cf16</string>
+	<key>STORAGE_BUCKET</key>
+	<string>newreader-4cf16.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:78717680757:ios:e751b6527759ce29bccc3c</string>
+</dict>
+</plist>

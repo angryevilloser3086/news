@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "78717680757",
+    "project_id": "newreader-4cf16",
+    "storage_bucket": "newreader-4cf16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78717680757:android:14b8d9b18e3d9ecebccc3c",
+        "android_client_info": {
+          "package_name": "com.example.news_reader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78717680757-71qaieiu7rqbjsem6ep1h0pkbg9r23b0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV06VFL8H3VLMssWWxxcXgU-TlnkTkXs0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78717680757-71qaieiu7rqbjsem6ep1h0pkbg9r23b0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
