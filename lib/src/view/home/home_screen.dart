@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_reader/src/providers/home_provider.dart';
-import 'package:news_reader/src/view/signup/signup_screen.dart';
+import 'package:news_reader/src/view/signup/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/article.dart';
-import '../../model/news_headline.dart';
 import '../../utils/app_localization.dart';
 import '../../utils/app_utils.dart';
 
@@ -18,17 +17,37 @@ class HomeScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => HomeProvider(),
       child: Scaffold(
-        backgroundColor:AppConstants.appBgColor,
+        backgroundColor: AppConstants.appBgColor,
         appBar: AppBar(
           elevation: 0,
           centerTitle: false,
           automaticallyImplyLeading: false,
           backgroundColor: AppConstants.appPrimaryColor,
-          title: Padding(
-              padding: AppConstants.leftRight_5,
-              child: Text(Strings.of(context).appName,
-                  style: Theme.of(context).textTheme.headline4)),
-          actions: const [Icon(Icons.play_arrow)],
+          title: InkWell(
+            onTap: () => {
+              FirebaseAuth.instance.signOut(),
+              AppConstants.moveNextstl(context,const LoginScreen())
+            },
+            child: Padding(
+                padding: AppConstants.leftRight_5,
+                child: Text(Strings.of(context).appName,
+                    style: Theme.of(context).textTheme.headline4)),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  "assets/images/Vector.png",
+                  height: 15,
+                  width: 15,
+                ),
+                AppConstants.w_5,
+                Text("IN",style: Theme.of(context).textTheme.headline4,),
+                AppConstants.w_10
+              ],
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
@@ -79,7 +98,6 @@ class HomeScreen extends StatelessWidget {
   Card newsCard(BuildContext context, Article article) {
     return Card(
       elevation: 0,
-      
       color: Colors.white,
       child: Container(
         height: 156,
@@ -94,26 +112,28 @@ class HomeScreen extends StatelessWidget {
               height: 119,
               width: 119,
               padding: AppConstants.all_5,
-              decoration:
-                  const BoxDecoration(borderRadius: AppConstants.boxRadius15),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
               child: FadeInImage.memoryNetwork(
                 height: 119,
                 width: 119,
-                fit: BoxFit.cover,
+                fadeInCurve: Curves.easeInCirc,
                 placeholder: kTransparentImage,
                 image: '${article.urlToImage}',
                 imageErrorBuilder: (context, error, stackTrace) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Icon(
                         Icons.error,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       Center(
                         child: Text(
                           'Error loading icon',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -143,7 +163,6 @@ class HomeScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5,
           ),
           Container(
-            padding: AppConstants.all_5,
             height: 80,
             width: 250,
             child: Text(description,
@@ -152,7 +171,6 @@ class HomeScreen extends StatelessWidget {
                 style: GoogleFonts.poppins(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.italic,
                   color: Colors.black,
                 )),
           ),

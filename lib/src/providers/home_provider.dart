@@ -15,9 +15,6 @@ class HomeProvider extends ChangeNotifier {
     // getToken(token);
     var response = await client.get(Uri.parse(baseURL));
     if (response.statusCode == 200) {
-    
-
-      
         topNews = News.fromJson(jsonDecode(response.body));
         notifyListeners();
      
