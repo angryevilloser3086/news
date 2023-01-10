@@ -54,7 +54,7 @@ class LoginProvider extends ChangeNotifier {
         .doc(uid)
         .set({'email': email, 'name': username}).then((value) {
       Navigator.of(context, rootNavigator: true).pop();
-      AppConstants.moveNextstl(context, const HomeScreen());
+      AppConstants.moveNextClearAll(context, const HomeScreen());
       AppConstants.showSnackBar(context, "Succesfully loggedIn");
     }).catchError((e) {
       Navigator.of(context, rootNavigator: true).pop();
@@ -91,7 +91,7 @@ class LoginProvider extends ChangeNotifier {
       result.user!.getIdToken().then((value) {
         // print("called${value}");
         Navigator.of(context, rootNavigator: true).pop();
-        AppConstants.moveNextstl(context, const HomeScreen());
+        AppConstants.moveNextClearAll(context, const HomeScreen());
       });
       notifyListeners();
       return null;

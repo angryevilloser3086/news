@@ -80,6 +80,16 @@ class AppConstants {
       MaterialPageRoute(builder: (context) => widget),
     );
   }
+  static void moveNextClearAll(BuildContext context, StatelessWidget widget) {
+    Navigator.pushAndRemoveUntil<dynamic>(
+        context,
+        MaterialPageRoute<dynamic>(
+          builder: (BuildContext context) => widget,
+        ),
+        ModalRoute.withName(
+            "/") //(route) => false, //if you want to disable back feature set to false
+        );
+  }
   
 }
 

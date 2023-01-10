@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           title: InkWell(
             onTap: () => {
               FirebaseAuth.instance.signOut(),
-              AppConstants.moveNextstl(context, const LoginScreen())
+              AppConstants.moveNextClearAll(context, const LoginScreen())
             },
             child: Padding(
                 padding: AppConstants.leftRight_5,
