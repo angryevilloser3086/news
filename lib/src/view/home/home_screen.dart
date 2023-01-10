@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:news_reader/src/providers/home_provider.dart';
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           title: InkWell(
             onTap: () => {
               FirebaseAuth.instance.signOut(),
-              AppConstants.moveNextstl(context,const LoginScreen())
+              AppConstants.moveNextstl(context, const LoginScreen())
             },
             child: Padding(
                 padding: AppConstants.leftRight_5,
@@ -34,19 +35,32 @@ class HomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4)),
           ),
           actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Image.asset(
-                  "assets/images/Vector.png",
-                  height: 15,
-                  width: 15,
+            Consumer<HomeProvider>(builder: (context, homeProvider, child) {
+              if (homeProvider.countryCode.isEmpty) {
+                homeProvider.fetchConfig();
+              }
+              return InkWell(
+                onTap: () {
+                  homeProvider.fetchConfig();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      "assets/images/Vector.png",
+                      height: 15,
+                      width: 15,
+                    ),
+                    AppConstants.w_5,
+                    Text(
+                      homeProvider.countryCode.toUpperCase(),
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    AppConstants.w_10
+                  ],
                 ),
-                AppConstants.w_5,
-                Text("IN",style: Theme.of(context).textTheme.headline4,),
-                AppConstants.w_10
-              ],
-            ),
+              );
+            }),
           ],
         ),
         body: SafeArea(
@@ -70,20 +84,38 @@ class HomeScreen extends StatelessWidget {
                         if (homeProvider.topNews == null) {
                           homeProvider.getTopHeadLine();
                         }
-                        if (homeProvider.topNews != null) {
-                          return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: homeProvider.topNews!.articles!.length,
-                              itemBuilder: ((context, index) {
-                                return newsCard(context,
-                                    homeProvider.topNews!.articles![index]);
-                              }));
-                        } else {
-                          return Text(
-                            Strings.of(context).noData,
-                            style: Theme.of(context).textTheme.headline1,
+                        if (homeProvider.isLoading) {
+                          return Align(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(Strings.of(context).loading,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                                const CircularProgressIndicator(
+                                  color: AppConstants.appPrimaryColor,
+                                ),
+                              ],
+                            ),
                           );
+                        } else {
+                          if (homeProvider.topNews != null) {
+                            return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount:
+                                    homeProvider.topNews!.articles!.length,
+                                itemBuilder: ((context, index) {
+                                  return newsCard(context,
+                                      homeProvider.topNews!.articles![index]);
+                                }));
+                          } else {
+                            return Text(
+                              Strings.of(context).noData,
+                              style: Theme.of(context).textTheme.headline1,
+                            );
+                          }
                         }
                       }))
                 ],
@@ -95,55 +127,67 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Card newsCard(BuildContext context, Article article) {
-    return Card(
-      elevation: 0,
-      color: Colors.white,
-      child: Container(
-        height: 156,
-        width: 356,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            newsText(context, article.source!.name!, article.content ?? "",
-                article.publishedAt!),
-            Container(
-              height: 119,
-              width: 119,
-              padding: AppConstants.all_5,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: FadeInImage.memoryNetwork(
-                height: 119,
-                width: 119,
-                fadeInCurve: Curves.easeInCirc,
-                placeholder: kTransparentImage,
-                image: '${article.urlToImage}',
-                imageErrorBuilder: (context, error, stackTrace) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.error,
-                        color: Colors.black,
-                      ),
-                      Center(
-                        child: Text(
-                          'Error loading icon',
-                          style: TextStyle(
+  newsCard(BuildContext context, Article article) {
+    return Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 0,
+        child: Container(
+          height: 156,
+          width: 300,
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              newsText(
+                  context,
+                  article.source!.name!,
+                  article.content ?? article.description ?? "",
+                  article.publishedAt!),
+              Container(
+                height: 122,
+                width: 125,
+                decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    color: Colors.white),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: FadeInImage.memoryNetwork(
+                    fit: BoxFit.cover,
+                    fadeInCurve: Curves.easeInCirc,
+                    placeholder: kTransparentImage,
+                    image: '${article.urlToImage}',
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            Icons.error,
                             color: Colors.black,
                           ),
-                        ),
-                      ),
-                      AppConstants.h_10
-                    ],
-                  ); //do something
-                },
+                          Center(
+                            child: Text(
+                              'Error loading icon',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          AppConstants.h_10
+                        ],
+                      ); //do something
+                    },
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
